@@ -12,7 +12,14 @@ This is a simple plugin that allows to share content to Instagram Stories using 
 
 ```
 IGStory.shareToStory(
-    opts,
+    [
+      appID,
+      backgroundImage,
+      stickerImage,
+      attributionURL,
+      backgroundTopColor,
+      backgroundBottomColor,
+    ],
     success => {
       console.log(success);
     },

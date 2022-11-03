@@ -47,17 +47,19 @@ public class IGStory extends CordovaPlugin {
 
     if (isPackageInstalled("com.instagram.android", pm)) {
       if (action.equals("shareToStory")) {
-        String backgroundImageUrl = args.getString(0);
-        String stickerAssetUrl = args.getString(1);
-        String attributionLinkUrl = args.getString(2);
-        String backgroundTopColor = args.getString(3);
-        String backgroundBottomColor = args.getString(4);
+        String appID = args.getString(0);
+        String backgroundImageUrl = args.getString(1);
+        String stickerAssetUrl = args.getString(2);
+        String attributionLinkUrl = args.getString(3);
+        String backgroundTopColor = args.getString(4);
+        String backgroundBottomColor = args.getString(5);
 
-        shareToStory(backgroundImageUrl, stickerAssetUrl, attributionLinkUrl, backgroundTopColor, backgroundBottomColor, callbackContext);
+        shareToStory(appID, backgroundImageUrl, stickerAssetUrl, attributionLinkUrl, backgroundTopColor, backgroundBottomColor, callbackContext);
       } else if (action.equals("shareImageToStory")) {
-        String backgroundImageData = args.getString(0);
+        String appID = args.getString(0);
+        String backgroundImageData = args.getString(1);
 
-        shareImageToStory(backgroundImageData, callbackContext);
+        shareImageToStory(appID, backgroundImageData, callbackContext);
       } else {
         callbackContext.error("ig not installed");
       }
@@ -68,7 +70,7 @@ public class IGStory extends CordovaPlugin {
     return true;
   }
 
-  private void shareToStory(String backgroundImageUrl, String stickerImageUrl, String attributionLinkUrl, String backgroundTopColor, String backgroundBottomColor, CallbackContext callbackContext) {
+  private void shareToStory(String appID, String backgroundImageUrl, String stickerImageUrl, String attributionLinkUrl, String backgroundTopColor, String backgroundBottomColor, CallbackContext callbackContext) {
 
     if (!backgroundTopColor.isEmpty() && !backgroundBottomColor.isEmpty()) {
       try {
@@ -83,6 +85,7 @@ public class IGStory extends CordovaPlugin {
 
         Intent intent = new Intent("com.instagram.share.ADD_TO_STORY");
         intent.setType(type);
+        intent.putExtra("source_application", appID)
         intent.putExtra("content_url", attributionLinkUrl);
         intent.putExtra("top_background_color", backgroundTopColor);
         intent.putExtra("bottom_background_color", backgroundBottomColor);
@@ -121,6 +124,8 @@ public class IGStory extends CordovaPlugin {
         // Instantiate implicit intent with ADD_TO_STORY action,
         // background asset, sticker asset, and attribution link
         Intent intent = new Intent("com.instagram.share.ADD_TO_STORY");
+        intent.putExtra("source_application", appID)
+
         intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         
         FileProvider FileProvider = new FileProvider();
@@ -144,7 +149,7 @@ public class IGStory extends CordovaPlugin {
     }
   }
 
-  private void shareImageToStory(String backgroundImageData, CallbackContext callbackContext) {
+  private void shareImageToStory(String appID, String backgroundImageData, CallbackContext callbackContext) {
 
     try {
       File parentDir = this.webView.getContext().getExternalFilesDir(null);
@@ -156,6 +161,8 @@ public class IGStory extends CordovaPlugin {
       Log.i(TAG, "savedImage");
 
       Intent intent = new Intent("com.instagram.share.ADD_TO_STORY");
+      intent.putExtra("source_application", appID)
+
       intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
       
       FileProvider FileProvider = new FileProvider();
