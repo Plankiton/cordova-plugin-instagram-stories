@@ -22,5 +22,7 @@ package com.cordova.plugin.utils;
 import android.support.v4.content.FileProvider;
 
 public class AssetProvider extends FileProvider {
-    // Nothing to do here
+  AssetProvider () {
+    super();
+  }
 }
