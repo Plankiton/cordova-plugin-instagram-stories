@@ -73,6 +73,7 @@ public class IGStory extends CordovaPlugin {
   private void shareToStory(String appID, String backgroundImageUrl, String stickerImageUrl, String attributionLinkUrl, String backgroundTopColor, String backgroundBottomColor, CallbackContext callbackContext) {
 
     if (!backgroundTopColor.isEmpty() && !backgroundBottomColor.isEmpty()) {
+      try {
         File parentDir = this.webView.getContext().getExternalFilesDir(null);
         File stickerImageFile = File.createTempFile("instagramSticker", ".png", parentDir);
         Uri stickerUri = null;
@@ -80,12 +81,11 @@ public class IGStory extends CordovaPlugin {
         URL u = new URL(stickerImageUrl);
         saveImage(u, stickerImageFile);
 
-        String type = "image/png";
+        String type = "image/*";
 
-      try {
         Intent intent = new Intent("com.instagram.share.ADD_TO_STORY");
         intent.setType(type);
-        intent.putExtra("source_application", appID)
+        intent.putExtra("source_application", appID);
         intent.putExtra("content_url", attributionLinkUrl);
         intent.putExtra("top_background_color", backgroundTopColor);
         intent.putExtra("bottom_background_color", backgroundBottomColor);
@@ -98,17 +98,11 @@ public class IGStory extends CordovaPlugin {
         // Instantiate activity and verify it will resolve implicit intent
         Activity activity = this.cordova.getActivity();
         activity.grantUriPermission("com.instagram.android", stickerUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-      } catch (Exception e) {
-        Log.e(TAG, "error mounting instagram payload");
-        Log.e(TAG, e.getMessage());
-        callbackContext.error(e.getMessage());
-      }
 
-      try {
         activity.startActivityForResult(intent, 0);
         callbackContext.success("shared");
       } catch (Exception e) {
-        Log.e(TAG, "error starting comunication with instagram");
+        Log.e(TAG, "We have an exception!");
         Log.e(TAG, e.getMessage());
         callbackContext.error(e.getMessage());
       }
@@ -130,7 +124,7 @@ public class IGStory extends CordovaPlugin {
         // Instantiate implicit intent with ADD_TO_STORY action,
         // background asset, sticker asset, and attribution link
         Intent intent = new Intent("com.instagram.share.ADD_TO_STORY");
-        intent.putExtra("source_application", appID)
+        intent.putExtra("source_application", appID);
 
         intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         
@@ -138,7 +132,7 @@ public class IGStory extends CordovaPlugin {
         stickerUri = FileProvider.getUriForFile(this.cordova.getActivity().getBaseContext(), this.cordova.getActivity().getBaseContext().getPackageName() + ".provider" ,stickerImageFile);
         backgroundUri = FileProvider.getUriForFile(this.cordova.getActivity().getBaseContext(), this.cordova.getActivity().getBaseContext().getPackageName() + ".provider" ,backgroundImageFile);
 
-        intent.setDataAndType(backgroundUri, "image/png");
+        intent.setDataAndType(backgroundUri, "image/*");
         intent.putExtra("interactive_asset_uri", stickerUri);
 
         intent.putExtra("content_url", attributionLinkUrl);
@@ -167,7 +161,7 @@ public class IGStory extends CordovaPlugin {
       Log.i(TAG, "savedImage");
 
       Intent intent = new Intent("com.instagram.share.ADD_TO_STORY");
-      intent.putExtra("source_application", appID)
+      intent.putExtra("source_application", appID);
 
       intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
       
