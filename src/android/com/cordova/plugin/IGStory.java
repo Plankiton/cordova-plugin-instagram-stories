@@ -42,6 +42,7 @@ public class IGStory extends CordovaPlugin {
   }
 
   public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
+    Log.d(TAG, "Running action " + action + " " + args.toString());
 
     PackageManager pm = this.cordova.getActivity().getBaseContext().getPackageManager();
 
@@ -63,8 +64,6 @@ public class IGStory extends CordovaPlugin {
       } else {
         callbackContext.error("ig not installed");
       }
-
-
     }
 
     return true;
