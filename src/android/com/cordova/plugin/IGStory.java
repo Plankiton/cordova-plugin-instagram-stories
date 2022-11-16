@@ -61,10 +61,10 @@ public class IGStory extends CordovaPlugin {
         String backgroundImageData = args.getString(1);
 
         shareImageToStory(appID, backgroundImageData, callbackContext);
-      } else {
-        Log.e(TAG, "instagram is not installed");
-        callbackContext.error("ig not installed");
       }
+    } else {
+      Log.e(TAG, "instagram is not installed");
+      callbackContext.error("instagram not installed");
     }
 
     return true;
