@@ -62,6 +62,7 @@ public class IGStory extends CordovaPlugin {
 
         shareImageToStory(appID, backgroundImageData, callbackContext);
       } else {
+        Log.e(TAG, "instagram is not installed");
         callbackContext.error("ig not installed");
       }
     }
@@ -101,11 +102,9 @@ public class IGStory extends CordovaPlugin {
         activity.startActivityForResult(intent, 0);
         callbackContext.success("shared");
       } catch (Exception e) {
-        Log.e(TAG, "We have an exception!");
-        Log.e(TAG, e.getMessage());
+        Log.e(TAG, "error trying share to story from URI: " + e.getMessage());
         callbackContext.error(e.getMessage());
       }
-
     } else {
       try {
         File parentDir = this.webView.getContext().getExternalFilesDir(null);
@@ -128,8 +127,8 @@ public class IGStory extends CordovaPlugin {
         intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         
         FileProvider FileProvider = new FileProvider();
-        stickerUri = FileProvider.getUriForFile(this.cordova.getActivity().getBaseContext(), this.cordova.getActivity().getBaseContext().getPackageName() + ".provider" ,stickerImageFile);
-        backgroundUri = FileProvider.getUriForFile(this.cordova.getActivity().getBaseContext(), this.cordova.getActivity().getBaseContext().getPackageName() + ".provider" ,backgroundImageFile);
+        stickerUri = FileProvider.getUriForFile(this.cordova.getActivity().getBaseContext(), this.cordova.getActivity().getBaseContext().getPackageName() + ".provider", stickerImageFile);
+        backgroundUri = FileProvider.getUriForFile(this.cordova.getActivity().getBaseContext(), this.cordova.getActivity().getBaseContext().getPackageName() + ".provider", backgroundImageFile);
 
         intent.setDataAndType(backgroundUri, "image/*");
         intent.putExtra("interactive_asset_uri", stickerUri);
@@ -143,6 +142,7 @@ public class IGStory extends CordovaPlugin {
         activity.startActivityForResult(intent, 0);
         callbackContext.success("shared");
       } catch (Exception e) {
+        Log.e(TAG, "error in shareToStory");
         callbackContext.error(e.getMessage());
       }
     }
